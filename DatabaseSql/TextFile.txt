@@ -1,0 +1,147 @@
+﻿-- ****************** SqlDBM: Microsoft SQL Server ******************
+-- ******************************************************************
+
+-- ************************************** [Users]
+
+CREATE TABLE [Users]
+(
+ [UserID]    int NOT NULL ,
+ [Username]  varchar(50) NOT NULL ,
+ [Firstname] varchar(50) NOT NULL ,
+ [Lastname]  varchar(50) NOT NULL ,
+ [Password]  varchar(50) NOT NULL ,
+ [Type]      int NOT NULL ,
+
+
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserID] ASC)
+);
+GO
+
+
+
+
+
+
+
+
+-- ************************************** [Units]
+
+CREATE TABLE [Units]
+(
+ [UnitID]      int NOT NULL ,
+ [Title]       varchar(50) NOT NULL ,
+ [Description] varchar(max) NOT NULL ,
+
+
+ CONSTRAINT [PK_Units] PRIMARY KEY CLUSTERED ([UnitID] ASC)
+);
+GO
+
+
+-- ****************** SqlDBM: Microsoft SQL Server ******************
+-- ******************************************************************
+
+-- ************************************** [Chapter]
+
+CREATE TABLE [Chapter]
+(
+ [ChapterID]     int NOT NULL ,
+ [Title]         varchar(50) NOT NULL ,
+ [UnitID]        int NOT NULL ,
+ [ChapterFormat] int NOT NULL ,
+ [Content]       varchar(max) NOT NULL ,
+
+
+ CONSTRAINT [PK_Lessons] PRIMARY KEY CLUSTERED ([ChapterID] ASC),
+ CONSTRAINT [FK_21] FOREIGN KEY ([UnitID])  REFERENCES [Units]([UnitID])
+);
+GO
+
+
+CREATE NONCLUSTERED INDEX [fkIdx_21] ON [Chapter] 
+ (
+  [UnitID] ASC
+ )
+
+GO
+
+
+
+
+
+
+
+-- ************************************** [Questions]
+
+CREATE TABLE [Questions]
+(
+ [QuestionID]  int NOT NULL ,
+ [Title]       varchar(max) NOT NULL ,
+ [Description] varchar(max) NOT NULL ,
+ [Option1]     varchar(max) NOT NULL ,
+ [Option2]     varchar(max) NOT NULL ,
+ [Option3]     varchar(max) NOT NULL ,
+ [Option4]     varchar(max) NOT NULL ,
+ [CorrectAnswer] int NOT NULL ,
+ [ChapterID]   int NOT NULL ,
+
+
+ CONSTRAINT [PK_Quizes] PRIMARY KEY CLUSTERED ([QuestionID] ASC),
+ CONSTRAINT [FK_36] FOREIGN KEY ([ChapterID])  REFERENCES [Chapter]([ChapterID])
+);
+GO
+
+
+CREATE NONCLUSTERED INDEX [fkIdx_36] ON [Questions] 
+ (
+  [ChapterID] ASC
+ )
+
+GO
+
+
+-- ****************** SqlDBM: Microsoft SQL Server ******************
+-- ******************************************************************
+
+-- ************************************** [Answers]
+
+CREATE TABLE [Answers]
+(
+ [AnswerID]   int NOT NULL ,
+ [QuestionID] int NOT NULL ,
+ [UserID]     int NOT NULL ,
+ [UnitID]     int NOT NULL ,
+ [IsCorrect]  bit NOT NULL ,
+ [Score]      int NOT NULL ,
+ [IsRevision] bit NOT NULL ,
+
+
+ CONSTRAINT [PK_Answers] PRIMARY KEY CLUSTERED ([AnswerID] ASC),
+ CONSTRAINT [FK_45] FOREIGN KEY ([QuestionID])  REFERENCES [Questions]([QuestionID]),
+ CONSTRAINT [FK_50] FOREIGN KEY ([UserID])  REFERENCES [Users]([UserID]),
+ CONSTRAINT [FK_60] FOREIGN KEY ([UnitID])  REFERENCES [Units]([UnitID])
+);
+GO
+
+
+CREATE NONCLUSTERED INDEX [fkIdx_45] ON [Answers] 
+ (
+  [QuestionID] ASC
+ )
+
+GO
+
+CREATE NONCLUSTERED INDEX [fkIdx_50] ON [Answers] 
+ (
+  [UserID] ASC
+ )
+
+GO
+
+CREATE NONCLUSTERED INDEX [fkIdx_60] ON [Answers] 
+ (
+  [UnitID] ASC
+ )
+
+GO
+
