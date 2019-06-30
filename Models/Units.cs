@@ -9,6 +9,7 @@ namespace Ecourse.Models
         {
             Answers = new HashSet<Answers>();
             Chapter = new HashSet<Chapter>();
+            TestResults = new HashSet<TestResults>();
         }
 
         public int UnitId { get; set; }
@@ -17,5 +18,6 @@ namespace Ecourse.Models
 
         public ICollection<Answers> Answers { get; set; }
         public ICollection<Chapter> Chapter { get; set; }
+        public ICollection<TestResults> TestResults { get; set; }
     }
 }

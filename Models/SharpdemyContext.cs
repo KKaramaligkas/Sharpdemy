@@ -18,6 +18,7 @@ namespace Ecourse.Models
         public virtual DbSet<Answers> Answers { get; set; }
         public virtual DbSet<Chapter> Chapter { get; set; }
         public virtual DbSet<Questions> Questions { get; set; }
+        public virtual DbSet<TestResults> TestResults { get; set; }
         public virtual DbSet<Units> Units { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
@@ -25,7 +26,7 @@ namespace Ecourse.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-39T165U\\SQLEXPRESS;Database=Sharpdemy;user=DESKTOP-39T165U\\Konstantine;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;Database=Sharpdemy;user=Konstantine;Trusted_Connection=True;");
             }
         }
 
@@ -93,6 +94,10 @@ namespace Ecourse.Models
 
                 entity.Property(e => e.UnitId).HasColumnName("UnitID");
 
+                entity.Property(e => e.Video)
+                    .IsRequired()
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.Unit)
                     .WithMany(p => p.Chapter)
                     .HasForeignKey(d => d.UnitId)
@@ -142,6 +147,37 @@ namespace Ecourse.Models
                     .HasForeignKey(d => d.ChapterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_36");
+            });
+
+            modelBuilder.Entity<TestResults>(entity =>
+            {
+                entity.HasKey(e => e.TestId);
+
+                entity.HasIndex(e => e.ChapterId)
+                    .HasName("fkIdx_82");
+
+                entity.HasIndex(e => e.UnitId)
+                    .HasName("fkIdx_85");
+
+                entity.Property(e => e.TestId).ValueGeneratedNever();
+
+                entity.Property(e => e.ChapterId).HasColumnName("ChapterID");
+
+                entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.Property(e => e.UnitId).HasColumnName("UnitID");
+
+                entity.HasOne(d => d.Chapter)
+                    .WithMany(p => p.TestResults)
+                    .HasForeignKey(d => d.ChapterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_82");
+
+                entity.HasOne(d => d.Unit)
+                    .WithMany(p => p.TestResults)
+                    .HasForeignKey(d => d.UnitId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_85");
             });
 
             modelBuilder.Entity<Units>(entity =>
